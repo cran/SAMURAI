@@ -3,19 +3,24 @@ function(table,
                          confidencelevel=95,                      
                          event.is.good=FALSE,
                          rr.vpos=NA, rr.pos=NA, rr.neg=NA, rr.vneg=NA,
-                         random.number.seed=NA, 
                          simsperstudy=10,
-                         plot.title="Random Effects Forest Plot",
-                         scale=1,
-                         unpub.oneoutlook=NA){
-  ## given a CSV file
-  ## return a forest plot
+                         unpub.oneoutlook=NA,
+                         ...){
+  ## In: A table of pub & unpub studies with binary outcomes
+  ## Out: A forest plot
+  
+  ## Callers: forestsens()
   
   ## This function is essentially plotbinaryforestfromtable()
   ## with a Part 0 (to import CSV file).
   
   ## to avoid R CMD CHECK NOTE: "no visible binding for global variable"
-  expt.events <- expt.n <- ctrl.events <- ctrl.n <- NULL  
+    expt.events <- expt.n <- ctrl.events <- ctrl.n <- NULL    
+  
+  ## for testing
+  # rr.vpos=NA; rr.pos=NA; rr.neg=NA; rr.vneg=NA
+  # event.is.good=FALSE
+  # unpub.oneoutlook = "negative"
   
   ###########
   ## Part 0.5 (optional) : assign same outlook to all unpublished studies
@@ -32,8 +37,6 @@ function(table,
     }
     ## Assign outlook of all unpublished studies.
     table0$outlook[table0$outlook != "published"] <- unpub.oneoutlook
-    ## Append outlook as subtitle to forest plot. 
-    plot.title <- paste(plot.title,":", unpub.oneoutlook)
   }
   
   ###########
@@ -41,14 +44,15 @@ function(table,
   pub0 <- table0[which(table0$outlook=="published"),]
   
   ## calculate log rr and its variance for each study
-  pub1 <- convertbin2effectsize(pub0, measure="RR") 
+  pub1 <- convert.binary2smd(pub0, measure="RR") 
   
   ## calculate log rr over all published studies
-  pubsummary <- summarizeeffect(pub1, confidencelevel=confidencelevel) 
+  pubsummary <- summarize.randomeffects(pub1, confidencelevel=confidencelevel) 
   #   exp(as.numeric(pubsummary))
   pubrr <- pubsummary$exp.m
   pubrr.lcl <- pubsummary$exp.m.lcl
   pubrr.ucl <- pubsummary$exp.m.ucl
+  pub.tau2  <- pubsummary$tau2
   
   ###########
   ## Part 2 : impute events in control arms
@@ -56,14 +60,12 @@ function(table,
   
   ###########
   ## Part 3 : assign RR to unpublished studies, acc to outlooks
-  
   rr <- assignrr(pubrr, pubrr.lcl, pubrr.ucl, event.is.good=event.is.good,
                  rr.vpos=rr.vpos, rr.pos=rr.pos, rr.neg=rr.neg, rr.vneg=rr.vneg)
   
   ###########
   ## Part 4 : impute events in intervention arms, with random variation
   ## set random number seed
-  if(is.na(random.number.seed) != T) {set.seed(random.number.seed)} 
   table4 <- impute.expt.events(table=table2, rr, simsperstudy=simsperstudy) 
   
   ###########
@@ -73,7 +75,8 @@ function(table,
   table5 <- escalc(measure="RR", ai=expt.events, n1i=expt.n, ci=ctrl.events, n2i=ctrl.n, data=table4, append=TRUE) 
   
   ## calculate the risk ratio of aggregated studies
-  #   aggregates <- summarizeeffect(table5, alpha=0.05) 
+  aggsummary <- summarize.randomeffects(table5, confidencelevel=confidencelevel)
+  agg.tau2 <- aggsummary$tau2
   
   ###########
   ## Part 6 : graph forest plot and add aggregate results
@@ -89,7 +92,5 @@ function(table,
                     alpha=(100-confidencelevel)/100,
                     rr.vpos=rr$vpos, rr.pos=rr$pos, rr.neg=rr$neg, rr.vneg=rr$vneg, rr.cur=rr$current,
                     event.desired=event.is.good, 
-                    title=plot.title,
-                    scale=scale)
-  
+                    ...) ## sigdigits, scale
 }

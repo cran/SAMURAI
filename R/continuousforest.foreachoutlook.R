@@ -1,17 +1,13 @@
 continuousforest.foreachoutlook <-
 function(table,
-                                            meanssd=FALSE,
-                                            confidencelevel=95,                      
-                                            event.is.good=FALSE,
-                                            smd.vpos=NA, smd.pos=NA, smd.neg=NA, smd.vneg=NA,
-                                            random.number.seed=NA, 
-                                            plot.title="Random Effects Forest Plot",
-                                            scale=1
-){
+  meanssd=FALSE,
+  confidencelevel=95,
+  event.is.good=FALSE,
+  smd.vpos=NA, smd.pos=NA, smd.neg=NA, smd.vneg=NA,
+  ...){
     
-  outlooks <- c("very positive", "positive", "negative", "very negative", 
-                "very positive CL", "positive CL", "negative CL", "very negative CL",
-                "current effect", "no effect")
+  outlooks <- c("very positive", "positive", "no effect", "negative", "very negative", 
+                "very positive CL", "positive CL", "current effect", "negative CL", "very negative CL")
   n <- length(outlooks)
   for (i in 1:n){
     outlook <- outlooks[i]
@@ -20,10 +16,8 @@ function(table,
                      confidencelevel=confidencelevel,
                      event.is.good=event.is.good,
                      smd.vpos=NA, smd.pos=NA, smd.neg=NA, smd.vneg=NA,                 
-                     random.number.seed=random.number.seed, 
-                     plot.title=plot.title,
-                     scale=scale,
-                     unpub.oneoutlook=outlook)
+                     unpub.oneoutlook=outlook,
+                     ...)
     
   }  
 }

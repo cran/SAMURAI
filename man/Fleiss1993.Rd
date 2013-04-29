@@ -9,7 +9,7 @@ The defined binary outcome event is death, and is undesired. When using the func
 }
 \usage{data(Fleiss1993)}
 \format{A data frame with 9 observations on the following 8 variables.
-\tabular{lll}{
+\tabular{lll}{ \cr
 	\bold{number}   \tab \code{integer}   \tab Study numeric id (optional) \cr
 	\bold{study}    \tab \code{character} \tab Name of study or principal investigator \cr
 	\bold{year}     \tab \code{integer}   \tab Year (optional) \cr
@@ -23,7 +23,7 @@ The defined binary outcome event is death, and is undesired. When using the func
 \details{
 The outlook of a study can be one of the following: \code{published}, \code{very positive}, \code{positive}, 	\code{negative}, \code{very negative}, \code{current effect}, \code{no effect}, \code{very positive CL}, \code{positive CL}, \code{negative CL}, or \code{very negative CL}.
 
-Since the outcome event is undesired, when using the function \code{forestsens()}, specify the option \code{event.is.good=FALSE}. Since this is the default setting for \code{forestsens()}, this does not need to be specified explicitly. 
+Since the outcome event is undesired, when using the function \code{forestsens()}, specify the option \code{event.is.good=FALSE}.
 }
 \source{
 Fleiss, JL. (1993) "The statistical basis of meta-analysis." \emph{Stat Methods Med Res.} 2(2):121-45.
@@ -35,13 +35,12 @@ Guido Schwartzer. \code{meta} package.
 library(SAMURAI)
 data(Fleiss1993)
 
-## The following commands give the same result, 
-## since by default forestsens() specifies event.is.good=FALSE.
-forestsens(table=Fleiss1993, unpub.oneoutlook="very negative")
+forestsens(table=Fleiss1993, binaryoutcome=TRUE, event.is.good=FALSE)
 
-## To get the summary effect, its confidence interval, and tau-squared:
-summarytable <- forestsens(table=Fleiss1993, foralloutlooks=TRUE)
-summarytable[which(summarytable$outlooks=="very negative"),]
-summarytable[which(summarytable$outlooks=="very negative"),]$tau2
+# To assign all unpublished studies to each of ten outlooks, one at a time, 
+# and then return a table of summary effects, their 95% confidence interval, 
+# and tau-squared.
+summtab <- forestsens(table=Fleiss1993, binaryoutcome=TRUE, event.is.good=FALSE, foralloutlooks=TRUE)
+summtab
 }
 \keyword{datasets}

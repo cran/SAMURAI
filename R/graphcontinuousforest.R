@@ -3,7 +3,9 @@ function(table,
                                   alpha=0.05,
                                   event.desired=TRUE, 
                                   title=NA, 
-                                  scale=1){
+                                  scale=1,
+                                  sigdigits=3,
+                                  ...){
   ## graph individual effects and confidence intervals
   
   # for testing
@@ -29,18 +31,18 @@ function(table,
   table$smd <- table$yi
   table$smd.v <- table$vi
   
-  table$smd.round <- sprintf("%.3f", round(table$smd,3) )
-  table$smd.v.round <- sprintf("%.3f", round(table$smd.v,3) )
+  table$smd.round <- sprintf("%.3f", round(table$smd, sigdigits) )
+  table$smd.v.round <- sprintf("%.3f", round(table$smd.v, sigdigits) )
   
   # make title
-  main.default <- "Forest Plot"
-  subtitle <- ""
-  #   ifelse(event.desired==TRUE, 
-  #          subtitle <- " : Event is GOOD", 
-  #          subtitle <- " : Event is BAD")  
-  if(is.na(title) == T){
-    title <- paste(main.default, subtitle, sep="")
-  }
+#   main.default <- "Forest Plot"
+#   subtitle <- ""
+#   #   ifelse(event.desired==TRUE, 
+#   #          subtitle <- " : Event is GOOD", 
+#   #          subtitle <- " : Event is BAD")  
+#   if(is.na(title) == T){
+#     title <- paste(main.default, subtitle, sep="")
+#   }
   
   metafor::forest(x=table$smd, 
                   vi=table$smd.v, 
@@ -49,25 +51,25 @@ function(table,
                   xlim = c(xmin, xmax),                    # horizontal dist relative to the vertical line at rr=1
                   slab = paste(table$study, table$year, table$outlook, sep = ", "),  # print author/year
                   ilab = cbind(table$expt.n, table$ctrl.n, table$smd.round, table$smd.v.round),  # print columns with count data
-                  ilab.xpos = c(-7.5,-6,-4,-2.5),  # position columns with count data
+                  ilab.xpos = c(-7.5,-6.5,-5.25,-4),  # position columns with count data
                   cex = scale2,                        # enlarge/reduce font
                   main = title
   )
   # vertical abline at smd=0
   abline(h=0)  
   # add column labels
-  text( c(-7.5,-6,-4,-2.5), y=num.studies+2, c("Expt", "Ctrl", "SMD", "Variance"), cex=scale )
-  text( x=c(-6.75,-3.25), y=num.studies+3, labels=c("Sample size", "SMD"), cex=scale2 )
+  text( c(-7.5,-6.5,-5.25,-4), y=num.studies+2, c("Expt", "Ctrl", "SMD", "Variance"), cex=scale )
+  text( x=c(-7,-4.625), y=num.studies+3, labels=c("Sample size", "SMD"), cex=scale2 )
   text( x=xmin, y=num.studies+2, labels="Study", pos=4 , cex=scale2 )
   text( x=xmax, y=num.studies+2, labels="SMD [95% CI]", pos=2 , cex=scale2 )
   
   if(event.desired==TRUE){
-    text( x=xmax, y=ymin, labels="(Event is GOOD)", pos=2, cex=scale )
+    # text( x=xmax, y=ymin, labels="(Event is GOOD)", pos=2, cex=scale )
     text( x=0, y=ymin, labels="Favors Control", pos=2, cex=scale )
     text( x=0, y=ymin, labels="Favors Intervention", pos=4, cex=scale )
   }
   if(event.desired==FALSE){
-    text( x=xmax, y=ymin, labels="(Event is BAD)", pos=2, cex=scale )
+    # text( x=xmax, y=ymin, labels="(Event is BAD)", pos=2, cex=scale )
     text( x=0, y=ymin, labels="Favors Intervention", pos=2, cex=scale )
     text( x=0, y=ymin, labels="Favors Control", pos=4, cex=scale )
   }

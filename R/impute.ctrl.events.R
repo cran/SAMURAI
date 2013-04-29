@@ -1,14 +1,11 @@
 impute.ctrl.events <-
 function(table, roundtable=FALSE){
-  ## given table of published and unpublished studies with binary outcome data
-  ## returns imputed control arm events for unpublished studies 
-  ## based on the rate of control arm events in published studies
-  
-  ## requires the following colunm headers: ctrl.n, ctrl.events, expt.n, expt.events
+  ## In: Table of P&U (published and unpublished) studies with binary outcome data
+  ## Out: Imputes events in control arms of unpublished studies, 
+  ## based on the summary risk ratio across control arms of published studies.
+  ## Note: Table should include the following columns: ctrl.n, ctrl.events, expt.n, expt.events
   
   num.studies <- nrow(table)  # number of rows in table
-  
-  ## Published studies: Determine risk ratio ##
   
   # subset of published studies only; c-control, x-experimental, n-sample size, v-# events
   pub <- table[which(table$outlook=="published"),]

@@ -3,13 +3,18 @@ function(
   table, 
   meanssd=FALSE,
   confidencelevel=95,
-  event.is.good=TRUE, smd.vpos=NA, smd.pos=NA, smd.neg=NA, smd.vneg=NA,
+  event.is.good=FALSE, smd.vpos=NA, smd.pos=NA, smd.neg=NA, smd.vneg=NA,
   unpub.oneoutlook=NA, 
-  random.number.seed=NA){
+  ...){
     
   ## assumptions
   ## - both control and experimental arms have the same sample size
   ## - variance within control and within expt arms are the same
+  
+  ## testing
+#   table <- greentea1
+#   meanssd=T
+#   confidencelevel=95
   
   table0 <- table
   
@@ -22,7 +27,7 @@ function(
   
   ## convert means/sd data to SMD
   if(meanssd==TRUE){
-    table0 <- convertmeans2smd(table0)
+    table0 <- convert.means2smd(table0)
   }
   
   ###########
@@ -46,7 +51,7 @@ function(
   pub0 <- table0[which(table0$outlook=="published"),]
   
   ## calculate SMD over all published studies
-  pubsummary <- summarizeeffect(pub0, confidencelevel=confidencelevel) 
+  pubsummary <- summarize.randomeffects(pub0, exp=FALSE, ...) 
   #   exp(as.numeric(pubsummary))
   pubsmd    <- pubsummary$m
   pubsmd.se <- pubsummary$m.se
@@ -86,7 +91,7 @@ function(
   ###########
   ## Part 4 : impute SMD and its variance
   
-  table4a <- impute.smd(table=table0, assignedsmd=assignedsmd) 
+  table4a <- impute.smd(table=table0, assignedsmd=assignedsmd,...) 
   table4b <- impute.smd.v(table=table4a)
     
   return(table4b)  

@@ -2,13 +2,8 @@ assignrr <-
 function(pubrr, pubrr.lcl, pubrr.ucl, event.is.good=FALSE,
                      rr.vpos=NA, rr.pos=NA, rr.neg=NA, rr.vneg=NA,
                      log=TRUE){  
-  ## given table of published and unpublished studies with binary outcome data
-  ## assigns risk ratios of unpublished studies 
-  ## based on CI of risk ratio of published studies
-  
-  ## for testing
-  #   pubrr=pubsummary$exp.m;  pubrr.lcl=pubsummary$exp.m.lcl
-  #   pubrr.ucl=pubsummary$exp.m.ucl;  event.is.good=TRUE
+  ## In: Table of published and unpublished studies with binary outcomes
+  ## Out: Assigns RRs of unpublished studies, based on CI of RR of summary across published studies
   
   if(is.na(rr.vpos)) { if (event.is.good==FALSE) {rr.vpos <- 0.33} else {rr.vpos <- 3} }
   if(is.na(rr.pos)) { if (event.is.good==FALSE) {rr.pos <- 0.5} else {rr.pos <- 2} }

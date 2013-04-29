@@ -1,11 +1,10 @@
-	\name{BHHR2009p92}
+\name{BHHR2009p92}
 \alias{BHHR2009p92}
 \docType{data}
 \title{Fictional Data Set, with Binary Outcomes}
 \description{A fictional meta-analytic data set with 6 published studies and 2 unpublished studies. The binary outcome event is not desired.}
-\usage{BHHR2009p92}
-\format{A data frame with 8 observations on the following 8 variables.
-\tabular{lll}{
+\usage{data(BHHR2009p92)}
+\format{A data frame with 8 observations on the following 8 variables.\tabular{lll}{ \cr
 	\bold{number}   \tab \code{integer}   \tab Study numeric id (optional) \cr
 	\bold{study}    \tab \code{character} \tab Name of study or principal investigator \cr
 	\bold{year}     \tab \code{integer}   \tab Year (optional) \cr
@@ -28,14 +27,12 @@ Borenstein, Hedges, Higgins, and Rothstein. Introduction to Meta-analysis. Wiley
 library(SAMURAI)
 data(BHHR2009p92)
 
-## The following commands give the same result, 
-## since by default forestsens() specifies event.is.good=FALSE.
-forestsens(table=BHHR2009p92, unpub.oneoutlook="very negative")
-forestsens(table=BHHR2009p92, unpub.oneoutlook="very negative", event.is.good=FALSE)
+forestsens(table=BHHR2009p92, binaryoutcome=TRUE, event.is.good=FALSE)
 
-## To get the summary effect, its confidence interval, and tau-squared:
-summarytable <- forestsens(table=BHHR2009p92, foralloutlooks=TRUE)
-summarytable[which(summarytable$outlooks=="very negative"),]
-summarytable[which(summarytable$outlooks=="very negative"),]$tau2	
+# To assign all unpublished studies to each of ten outlooks, one at a time, 
+# and then return a table of summary effects, their 95% confidence interval, 
+# and tau-squared.
+summtab <- forestsens(table=BHHR2009p92,binaryoutcome=TRUE,event.is.good=FALSE,foralloutlooks=TRUE)
+summtab
 }
 \keyword{datasets}

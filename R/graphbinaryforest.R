@@ -3,8 +3,10 @@ function(table,
                               alpha=0.05,
                               rr.vpos, rr.pos, rr.neg, rr.vneg, rr.cur,
                               event.desired=FALSE, 
-                              title=NA, 
-                              scale=1){
+                              scale=1,
+                              sigdigits=3,
+                              title=NA,
+                              ...){
   ## graph individual effects and confidence intervals
   
   testing=FALSE
@@ -34,15 +36,15 @@ function(table,
   table$logrr.var <- table$vi
   
   # make title
-  main.default <- "Forest Plot"
-  subtitle <- ""
-  #   ifelse(event.desired==TRUE, 
-  #          subtitle <- " : Event is GOOD", 
-  #          subtitle <- " : Event is BAD")  
-  if(is.na(title) == T){
-    title <- paste(main.default, subtitle, sep="")
-  }
-  
+#   main.default <- "Forest Plot"
+#   subtitle <- ""
+#   #   ifelse(event.desired==TRUE, 
+#   #          subtitle <- " : Event is GOOD", 
+#   #          subtitle <- " : Event is BAD")  
+#   if(is.na(title) == T){
+#     title <- paste(main.default, subtitle, sep="")
+#   }
+#   
   if(testing==TRUE){cat(9)}
   
   metafor::forest(table$logrr, table$logrr.var, 
@@ -79,23 +81,22 @@ function(table,
   text ( x=xmin, y=ymin, labels="All effects are estimated with random effects models", pos=4, cex=scale*0.8 )
   
   #  round off rr for display
-  rr.vpos <- round(rr.vpos,2)
-  rr.pos <- round(rr.pos,2)
-  rr.cur <- round(rr.cur,2)
-  rr.neg <- round(rr.neg,2)
-  rr.vneg <- round(rr.vneg,2)
+  rr.vpos <- round(rr.vpos,sigdigits)
+  rr.pos <- round(rr.pos,sigdigits)
+  rr.cur <- round(rr.cur,sigdigits)
+  rr.neg <- round(rr.neg,sigdigits)
+  rr.vneg <- round(rr.vneg,sigdigits)
   
-  if(testing==TRUE){cat(11)}
-  
+  if(testing==TRUE){cat(11)}  
   
   aggregates <- aggeffects.asis(table, confidencelevel=(1-alpha)*100)
   aggregates <- aggregates[1:3,]
   
   ## generate labels; include tau-squared
   agg.tau2 <- tau2(table)
-  l.pub     <- paste("Published  ( tau^2 =",round(agg.tau2$pub,3),")")
-  l.unpub   <- paste("Unpublished with specified outlooks ( tau^2 =",round(agg.tau2$unpub,3),")")
-  l.all     <- paste("Published & Unpublished ( tau^2 =",round(agg.tau2$all,3),")")
+  l.pub     <- paste("Published  ( tau^2 =",round(agg.tau2$pub,sigdigits),")")
+  l.unpub   <- paste("Unpublished with specified outlooks ( tau^2 =",round(agg.tau2$unpub,sigdigits),")")
+  l.all     <- paste("Published & Unpublished ( tau^2 =",round(agg.tau2$all,sigdigits),")")
   agglabels <- c(l.pub, l.unpub, l.all)
   
   addpoly(as.numeric(aggregates$m), sei=as.numeric(aggregates$m.se), atransf=exp, mlab=agglabels, cex=scale)

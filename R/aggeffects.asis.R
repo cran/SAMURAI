@@ -10,17 +10,17 @@ function(table, measure="RR", method="DL",
   # published
   pub <- table[which(table$outlook=="published"),]
   if(nrow(pub)>0){
-    pub.agg <- summarizeeffect(pub, confidencelevel=confidencelevel)
+    pub.agg <- summarize.randomeffects(pub, confidencelevel=confidencelevel)
   } else { pub.agg <- NA}
   
   # summary effect for unpublished studies only
   unpub <- table[which(table$outlook != "published"),]
   if(nrow(unpub)>0){
-    unpub.agg <- summarizeeffect(unpub, confidencelevel=confidencelevel)  
+    unpub.agg <- summarize.randomeffects(unpub, confidencelevel=confidencelevel)  
   } else { unpub.agg <- NA }
 
   # overall summary effect
-  all.agg <- summarizeeffect(table=table, confidencelevel=confidencelevel)
+  all.agg <- summarize.randomeffects(table=table, confidencelevel=confidencelevel)
   
   out <- as.data.frame(rbind(pub.agg,unpub.agg,all.agg))
   return(out)  

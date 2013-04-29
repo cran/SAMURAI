@@ -1,12 +1,12 @@
 binary.table <-
 function(table, 
-                         confidencelevel=95,                      
-                         measure="RR",
-                         event.is.good=FALSE,
-                         rr.vpos=NA, rr.pos=NA, rr.neg=NA, rr.vneg=NA,
-                         random.number.seed=NA, 
-                         simsperstudy=10,
-                         unpub.oneoutlook=NA){
+  confidencelevel=95,                      
+  measure="RR",
+  event.is.good=FALSE,
+  rr.vpos=NA, rr.pos=NA, rr.neg=NA, rr.vneg=NA,
+  simsperstudy=10,
+  unpub.oneoutlook=NA,
+  ...){
   ## given a CSV file
   ## return a table of aggregate mean effects and CI's 
 
@@ -35,16 +35,17 @@ function(table,
   pub0 <- table0[which(table0$outlook=="published"),]
   
   ## calculate log rr and its variance for each study
-  pub1 <- convertbin2effectsize(pub0, measure=measure) 
+  pub1 <- convert.binary2smd(pub0, measure=measure) 
   
   ## calculate log rr over all published studies
-  pubsummary <- summarizeeffect(pub1, confidencelevel=confidencelevel) 
+  pubsummary <- summarize.randomeffects(pub1,...) 
   #   exp(as.numeric(pubsummary))
   pubrr <- pubsummary$exp.m
   pubrr.lcl <- pubsummary$exp.m.lcl
   pubrr.ucl <- pubsummary$exp.m.ucl
   
   ###########
+
   ## Part 2 : impute events in control arms
   table2 <- impute.ctrl.events(table0) 
   
@@ -56,15 +57,17 @@ function(table,
   
   ###########
   ## Part 4 : impute events in intervention arms, with random variation
-  ## set random number seed
-  if(is.na(random.number.seed) != T) {set.seed(random.number.seed)} 
   table4 <- impute.expt.events(table=table2, rr, simsperstudy=simsperstudy) 
 
   ###########
   ## Part 5 : fit random effects model
   
   ## calculate log risk ratio for each study and its standard error
-  table5 <- escalc(measure="RR", ai=expt.events, n1i=expt.n, ci=ctrl.events, n2i=ctrl.n, data=table4, append=TRUE) 
+  table5 <- escalc(data=table4, append=TRUE, 
+    measure="RR", 
+    ai=expt.events, n1i=expt.n, 
+    ci=ctrl.events, n2i=ctrl.n
+    ) 
   
   return(table5)
 }
