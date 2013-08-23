@@ -5,7 +5,7 @@
 \description{
 A meta-analytic data set that includes 7 published placebo-controlled randomized studies of the effect of aspirin in preventing death after myocardial infarction. The data set also includes 2 (fictional) unpublished studies. 
 
-The defined binary outcome event is death, and is undesired. When using the function \code{forestsens()}, specify the option \code{event.is.good=FALSE}.
+The defined binary outcome event is death, and is undesired. When using the function \code{forestsens()}, specify the option \code{higher.is.better=FALSE}.
 }
 \usage{data(Fleiss1993)}
 \format{A data frame with 9 observations on the following 8 variables.
@@ -23,7 +23,7 @@ The defined binary outcome event is death, and is undesired. When using the func
 \details{
 The outlook of a study can be one of the following: \code{published}, \code{very positive}, \code{positive}, 	\code{negative}, \code{very negative}, \code{current effect}, \code{no effect}, \code{very positive CL}, \code{positive CL}, \code{negative CL}, or \code{very negative CL}.
 
-Since the outcome event is undesired, when using the function \code{forestsens()}, specify the option \code{event.is.good=FALSE}.
+Since the outcome event is undesired, when using the function \code{forestsens()}, specify the option \code{higher.is.better=FALSE}.
 }
 \source{
 Fleiss, JL. (1993) "The statistical basis of meta-analysis." \emph{Stat Methods Med Res.} 2(2):121-45.
@@ -35,12 +35,12 @@ Guido Schwartzer. \code{meta} package.
 library(SAMURAI)
 data(Fleiss1993)
 
-forestsens(table=Fleiss1993, binaryoutcome=TRUE, event.is.good=FALSE)
+forestsens(table=Fleiss1993, binary=TRUE, higher.is.better=FALSE)
 
 # To assign all unpublished studies to each of ten outlooks, one at a time, 
 # and then return a table of summary effects, their 95% confidence interval, 
 # and tau-squared.
-summtab <- forestsens(table=Fleiss1993, binaryoutcome=TRUE, event.is.good=FALSE, foralloutlooks=TRUE)
+summtab <- forestsens(table=Fleiss1993, binary=TRUE, higher.is.better=FALSE, all.outlooks=TRUE)
 summtab
 }
 \keyword{datasets}

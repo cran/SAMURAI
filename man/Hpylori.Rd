@@ -21,7 +21,7 @@ Randomized clinical trials comparing duodenal ulcer acute healing among (1) pati
 \details{
 The outlook of a study can be one of the following: \code{published}, \code{very positive}, \code{positive},  \code{negative}, \code{very negative}, \code{current effect}, \code{no effect}, \code{very positive CL}, \code{positive CL}, \code{negative CL}, or \code{very negative CL}.
 
-Since the outcome event is undesired, when using the function \code{forestsens()}, specify the option \code{event.is.good=FALSE}. 
+Since the outcome event is undesired, when using the function \code{forestsens()}, specify the option \code{higher.is.better=FALSE}. 
 }
 \source{
 Ford AC, Delaney B, Forman D, Moayyedi P. "Eradication therapy for peptic ulcer disease in \emph{Helicobacter pylori} positive patients." \emph{Cochrane Database of Systematic Reviews} 2006, Issue 2. Art No.: CD003840. DOI: 10.1002/14651858.CD003840.pub4. 
@@ -32,22 +32,24 @@ Figure 3. Forest plot of comparison: 1 duodenal ulcer acute healing hp eradicati
 data(Hpylori)
 Hpylori
 
-forestsens(table=Hpylori,binaryoutcome=TRUE,event.is.good=FALSE,scale=0.8)
+forestsens(table=Hpylori, binary=TRUE, higher.is.better=FALSE, scale=0.8)
 
 # To fix the random number seed to make the results reproducible.
-forestsens(table=Hpylori,binaryoutcome=TRUE,event.is.good=FALSE,scale=0.8,random.number.seed=106)
+forestsens(table=Hpylori, binary=TRUE, higher.is.better=FALSE, scale=0.8, 
+  random.number.seed=106)
 
 # To modify the outlooks of all unpublished studies to, say, "very negative". 
-forestsens(table=Hpylori,binaryoutcome=TRUE,event.is.good=FALSE,scale=0.8,random.number.seed=106,
-  unpub.oneoutlook="very negative")
+forestsens(table=Hpylori, binary=TRUE, higher.is.better=FALSE, scale=0.8, 
+  random.number.seed=106, outlook="very negative")
 
 # To modify the outlooks of all unpublished studies to, say, "very negative", 
 # and overruling the default relative risk assigned to "very negative".
-forestsens(table=Hpylori,binaryoutcome=TRUE,event.is.good=FALSE,scale=0.8,random.number.seed=106,
-  unpub.oneoutlook="very negative", rr.vneg=2.5)
+forestsens(table=Hpylori, binary=TRUE, higher.is.better=FALSE, scale=0.8, 
+  random.number.seed=106, outlook="very negative", rr.vneg=2.5)
 
-# To generate a forest plot for each of the ten default outlooks defined by forestsens().
-forestsens(table=Hpylori,binaryoutcome=TRUE,event.is.good=FALSE,scale=0.8,random.number.seed=106,
-  foralloutlooks=TRUE)
+# To generate a forest plot for each of the ten default outlooks 
+# defined by forestsens().
+forestsens(table=Hpylori, binary=TRUE, higher.is.better=FALSE, scale=0.8, 
+  random.number.seed=106, all.outlooks=TRUE)
 }
 \keyword{datasets}

@@ -1,2 +1,2 @@
-export(forestsens)
+export(forestsens, funnelplot)
 import(metafor)

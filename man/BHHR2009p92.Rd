@@ -18,7 +18,7 @@
 \details{
 The outlook of a study can be one of the following: \code{published}, \code{very positive}, \code{positive}, 	\code{negative}, \code{very negative}, \code{current effect}, \code{no effect}, \code{very positive CL}, \code{positive CL}, \code{negative CL}, or \code{very negative CL}.
 
-Since the outcome event is undesired, when using the function \code{forestsens()}, specify the option \code{event.is.good=FALSE}. Since this is the default setting for \code{forestsens()}, this does not need to be specified explicitly. 
+Since the outcome event is undesired, when using the function \code{forestsens()}, specify the option \code{higher.is.better=FALSE}. Since this is the default setting for \code{forestsens()}, this does not need to be specified explicitly. 
 }
 \source{
 Borenstein, Hedges, Higgins, and Rothstein. Introduction to Meta-analysis. Wiley, 2009, page 92.  
@@ -27,12 +27,12 @@ Borenstein, Hedges, Higgins, and Rothstein. Introduction to Meta-analysis. Wiley
 library(SAMURAI)
 data(BHHR2009p92)
 
-forestsens(table=BHHR2009p92, binaryoutcome=TRUE, event.is.good=FALSE)
+forestsens(table=BHHR2009p92, binary=TRUE, higher.is.better=FALSE)
 
 # To assign all unpublished studies to each of ten outlooks, one at a time, 
 # and then return a table of summary effects, their 95% confidence interval, 
 # and tau-squared.
-summtab <- forestsens(table=BHHR2009p92,binaryoutcome=TRUE,event.is.good=FALSE,foralloutlooks=TRUE)
+summtab <- forestsens(table=BHHR2009p92, binary=TRUE, higher.is.better=FALSE, all.outlooks=TRUE)
 summtab
 }
 \keyword{datasets}

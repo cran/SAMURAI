@@ -23,7 +23,7 @@ Randomized clinical trials of at least 12 weeks duration assessing the effect of
 \details{
 The outlook of a study can be one of the following: \code{published}, \code{very positive}, \code{positive},  \code{negative}, \code{very negative}, \code{current effect}, \code{no effect}, \code{very positive CL}, \code{positive CL}, \code{negative CL}, or \code{very negative CL}.
 
-In this setting, a more negative change in outcome is desired; specify the option \code{event.is.good=FALSE} for the function \code{forestsens()}.  
+In this setting, a more negative change in outcome is desired; specify the option \code{higher.is.better=FALSE} for the function \code{forestsens()}.
 }
 \source{
 Jurgens TM, Whelan AM, Killian L, Doucette S, Kirk S, Foy E. "Green tea for weight loss and weight maintenance in overweight or obese adults." \emph{Cochrane Database of Systematic Reviews} 2012, Issue 12. Art. No.: CD008650. DOI: 10.1002/14651858.CD008650.pub2.
@@ -34,25 +34,25 @@ Figure 6. Forest plot of comparison: 1 Primary outcomes, outcome: 1.2Weight loss
 data(greentea)
 greentea
 
-forestsens(greentea, binaryoutcome=FALSE, meanssd=TRUE, event.is.good=FALSE)
+forestsens(greentea, binary=FALSE, mean.sd=TRUE, higher.is.better=FALSE)
 
 # To fix the random number seed to make the results reproducible. 
-forestsens(greentea, binaryoutcome=FALSE, meanssd=TRUE, event.is.good=FALSE, random.number.seed=52)
+forestsens(greentea, binary=FALSE, mean.sd=TRUE, higher.is.better=FALSE, random.number.seed=52)
 
 # To modify the outlooks of all unpublished studies to, say, "negative". 
-forestsens(greentea,binaryoutcome=FALSE,meanssd=TRUE,event.is.good=FALSE,random.number.seed=52,
-  unpub.oneoutlook="negative")
+forestsens(greentea, binary=FALSE,mean.sd=TRUE,higher.is.better=FALSE,random.number.seed=52,
+  outlook="negative")
 
 # To modify the outlooks of all unpublished studies to, say, "negative", and 
 # overruling the default standardized mean difference (SMD) assigned to "negative". 
 # (In this case, for a negative outlook we might assign a positive SMD, which corresponds to 
 # having weight loss under green tea treatment less than weight loss under control treatment, 
 # i.e. the green tea treatment is less effective at achieving weight loss than control treatment.
-forestsens(greentea,binaryoutcome=FALSE,meanssd=TRUE,event.is.good=FALSE,random.number.seed=52,
-  unpub.oneoutlook="negative",smd.neg=0.4)
+forestsens(greentea, binary=FALSE, mean.sd=TRUE, higher.is.better=FALSE,random.number.seed=52,
+  outlook="negative", smd.neg=0.4)
 
 # To generate a forest plot for each of the ten default outlooks defined by forestsens().
-forestsens(greentea,binaryoutcome=FALSE,meanssd=TRUE,event.is.good=FALSE,random.number.seed=52,
-  foralloutlooks=TRUE)
+forestsens(greentea, binary=FALSE, mean.sd=TRUE, higher.is.better=FALSE, random.number.seed=52,
+  all.outlooks=TRUE)
 }
 \keyword{datasets}

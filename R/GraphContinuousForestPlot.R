@@ -1,21 +1,18 @@
-graphcontinuousforest <-
+GraphContinuousForestPlot <-
 function(table, 
-                                  alpha=0.05,
-                                  event.desired=TRUE, 
-                                  title=NA, 
-                                  scale=1,
-                                  sigdigits=3,
-                                  ...){
+  higher.is.better=TRUE, 
+  level=95,
+  title=NA, scale=1, digits=3, ...){
   ## graph individual effects and confidence intervals
   
   # for testing
   #   table=table4b
   #   title=NA
-  #   event.desired=TRUE
-  #   alpha=0.05
+  #   higher.is.better=TRUE
+  #   level=95
   
   # adjust font sizes 
-  scale <- 0.75*scale
+  scale <-  scale * 0.6
   scale2 <- scale * 1.2
   
   # count number of studies - needed to format forest plot 
@@ -31,13 +28,13 @@ function(table,
   table$smd <- table$yi
   table$smd.v <- table$vi
   
-  table$smd.round <- sprintf("%.3f", round(table$smd, sigdigits) )
-  table$smd.v.round <- sprintf("%.3f", round(table$smd.v, sigdigits) )
+  table$smd.round <- sprintf("%.3f", round(table$smd, digits) )
+  table$smd.v.round <- sprintf("%.3f", round(table$smd.v, digits) )
   
   # make title
 #   main.default <- "Forest Plot"
 #   subtitle <- ""
-#   #   ifelse(event.desired==TRUE, 
+#   #   ifelse(higher.is.better==TRUE, 
 #   #          subtitle <- " : Event is GOOD", 
 #   #          subtitle <- " : Event is BAD")  
 #   if(is.na(title) == T){
@@ -63,24 +60,23 @@ function(table,
   text( x=xmin, y=num.studies+2, labels="Study", pos=4 , cex=scale2 )
   text( x=xmax, y=num.studies+2, labels="SMD [95% CI]", pos=2 , cex=scale2 )
   
-  if(event.desired==TRUE){
+  if(higher.is.better==TRUE){
     # text( x=xmax, y=ymin, labels="(Event is GOOD)", pos=2, cex=scale )
     text( x=0, y=ymin, labels="Favors Control", pos=2, cex=scale )
     text( x=0, y=ymin, labels="Favors Intervention", pos=4, cex=scale )
   }
-  if(event.desired==FALSE){
+  if(higher.is.better==FALSE){
     # text( x=xmax, y=ymin, labels="(Event is BAD)", pos=2, cex=scale )
     text( x=0, y=ymin, labels="Favors Intervention", pos=2, cex=scale )
     text( x=0, y=ymin, labels="Favors Control", pos=4, cex=scale )
   }
   text ( x=xmin, y=ymin, labels="All effects are estimated with random effects models", pos=4, cex=scale*0.8 )
-
   
-  aggregates <- aggeffects.asis(table, confidencelevel=(1-alpha)*100)
+  aggregates <- CalculateSummaryEffectsForOneTable(table, level=level)
   aggregates <- aggregates[1:3,]
   
   ## generate labels; include tau-squared
-  agg.tau2 <- tau2(table)
+  agg.tau2 <- CalculateTauSquared(table)
   l.pub     <- paste("Published  ( tau^2 =",round(agg.tau2$pub,3),")")
   l.unpub   <- paste("Unpublished with specified outlooks ( tau^2 =",round(agg.tau2$unpub,3),")")
   l.all     <- paste("Published & Unpublished ( tau^2 =",round(agg.tau2$all,3),")")
